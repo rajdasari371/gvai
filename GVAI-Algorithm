@@ -1,0 +1,214 @@
+# Geospatial Vulnerability Assessment Index (GVAI) Algorithm
+
+The **Geospatial Vulnerability Assessment Index (GVAI)** is an open-source, data-driven algorithm designed to quantify the vulnerability of geographic zones to tornado-induced vegetation damage and critical infrastructure impact. It provides a composite score to identify high-risk areas for proactive disaster mitigation.
+
+## Features
+* **Multi-Layer Analysis:** Integrates NDVI satellite imagery, historical tornado tracks, and critical infrastructure data.
+* **Zone-Specific Scoring:** Uses customizable, weighted formulas that adapt based on land-use types (e.g., urban, forest).
+* **Automated Visualization:** Generates an interactive HTML map using Folium for intuitive exploration of vulnerability scores.
+
+## Setup and Installation
+
+### Prerequisites
+You need a Python environment (3.8+).
+
+### Steps
+1.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/YourUsername/GVAI-Algorithm.git](https://github.com/YourUsername/GVAI-Algorithm.git)
+    cd GVAI-Algorithm/gvai_algorithm
+    ```
+2.  **Install Dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  **Data Setup:**
+    Place your input geospatial files (as listed in the `TECHNICAL_SPEC.md`) into the `gvai_algorithm/data/` directory.
+
+## Usage
+Run the core script to process the data and generate results:
+
+```bash
+python gvai_core.py
+
+Since you provided the full Python code, the technical specification, and the web calculator source code in the prompt that I am now to complete, here is the final, comprehensive list of files you need to create, their content, and how to structure them in your GitHub repository.
+
+1. Repository Setup and Structure
+First, create a main project folder (e.g., GVAI-Algorithm) and establish the following subdirectories and files:
+
+GVAI-Algorithm/
+├── README.md                  # Project overview and setup guide
+├── LICENSE                    # Legal permissions (e.g., MIT License)
+├── TECHNICAL_SPEC.md          # Full technical document
+├── .gitignore                 # Files to ignore (outputs, venv, etc.)
+├── gvai_algorithm/            # Python core and data configuration
+│   ├── gvai_core.py           # Main Python algorithm script
+│   ├── requirements.txt       # Python dependencies
+│   ├── zone_weights.json      # Customizable weighting configuration
+│   └── data/                  # Placeholder for required input files
+├── gvai_web_calculator/       # HTML, CSS, and JS for the calculator
+│   └── index.html             # The standalone web calculator
+2. File Contents and Instructions
+A. Root Directory Files (GVAI-Algorithm/)
+1. README.md (Project Overview)
+How to Add: Create a file named README.md in the root folder.
+Content: (Use the summary and setup provided in the previous step)
+
+Markdown
+
+# Geospatial Vulnerability Assessment Index (GVAI) Algorithm
+
+The **Geospatial Vulnerability Assessment Index (GVAI)** is an open-source, data-driven algorithm designed to quantify the vulnerability of geographic zones to tornado-induced vegetation damage and critical infrastructure impact. It provides a composite score to identify high-risk areas for proactive disaster mitigation.
+
+## Features
+* **Multi-Layer Analysis:** Integrates NDVI satellite imagery, historical tornado tracks, and critical infrastructure data.
+* **Zone-Specific Scoring:** Uses customizable, weighted formulas that adapt based on land-use types (e.g., urban, forest).
+* **Automated Visualization:** Generates an interactive HTML map using Folium for intuitive exploration of vulnerability scores.
+
+## Setup and Installation
+
+### Prerequisites
+You need a Python environment (3.8+).
+
+### Steps
+1.  **Clone the Repository:**
+    ```bash
+    git clone [https://github.com/YourUsername/GVAI-Algorithm.git](https://github.com/YourUsername/GVAI-Algorithm.git)
+    cd GVAI-Algorithm/gvai_algorithm
+    ```
+2.  **Install Dependencies:**
+    ```bash
+    pip install -r requirements.txt
+    ```
+3.  **Data Setup:**
+    Place your input geospatial files (as listed in the `TECHNICAL_SPEC.md`) into the `gvai_algorithm/data/` directory.
+
+## Usage
+Run the core script to process the data and generate results:
+
+```bash
+python gvai_core.py
+Outputs
+The script will generate two main outputs in the root directory:
+
+gvai_vulnerability_map.html (Interactive map)
+
+ndvi_zones_gvai_results.geojson (Processed data with scores)
+
+Documentation
+For a full breakdown of the methodology, input requirements, feature engineering, and the proprietary scoring formula, please refer to:
+
+https://docs.google.com/document/d/1hr_tK6aJl2TUwGk0vy9ED6tchg7M7_WgdqexRlcbF4k/edit?usp=sharing 
+Created by Rajendra Nath Dasari
+
+
+#### 2. `LICENSE` (Legal Terms)
+
+**How to Add:** Create a file named `LICENSE` in the root folder. You should choose a license. The **MIT License** is highly recommended for public code.
+**Content (MIT License Example):**
+
+MIT License
+
+Copyright (c) 2025 Rajendra Nath Dasari
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+#### 3. `TECHNICAL_SPEC.md` (Full Documentation)
+
+**How to Add:** Create a file named `TECHNICAL_SPEC.md` in the root folder.
+**Content:** The entire "Geospatial Vulnerability Assessment Index (GVAI) Algorithm - Technical Specification" document you provided, formatted in Markdown for readability (use $\#$ for headings, $\ast$ for lists, etc.).
+
+#### 4. `.gitignore` (Ignore List)
+
+**How to Add:** Create a file named `.gitignore` in the root folder.
+**Content:**
+
+Operating System Files
+.DS_Store
+Thumbs.db
+
+Python files and virtual environment
+*.pyc
+pycache
+venv/
+.idea/
+.vscode/
+
+Algorithm Inputs (too large for Git)
+gvai_algorithm/data/*
+
+Algorithm Outputs
+gvai_vulnerability_map.html
+ndvi_zones_gvai_results.geojson
+
+
+***
+
+### B. Python Core Files (`GVAI-Algorithm/gvai_algorithm/`)
+
+#### 1. `gvai_core.py` (Main Script)
+
+**How to Add:** Create this file and directory.
+**Content:** The full Python code you provided, modified to load weights from the JSON file and to use relative paths correctly (since it will be run from the `gvai_algorithm` directory, the outputs are saved one level up, in the root folder).
+
+**(Use the modified code block provided in the previous response, including the imports, configuration, and all four steps of the algorithm.)**
+
+#### 2. `requirements.txt` (Dependencies)
+
+**How to Add:** Create this file in the `gvai_algorithm` directory.
+**Content:**
+
+geopandas
+rasterio
+numpy
+folium
+pandas
+
+
+#### 3. `zone_weights.json` (Configuration)
+
+**How to Add:** Create this file in the `gvai_algorithm` directory.
+**Content:**
+
+```json
+{
+    "urban": {
+        "infra_mult": 0.6,
+        "exposed_boost": 2.0
+    },
+    "agricultural": {
+        "infra_mult": 0.4,
+        "exposed_boost": 1.2
+    },
+    "industrial": {
+        "infra_mult": 0.5,
+        "exposed_boost": 1.8
+    },
+    "forest": {
+        "infra_mult": 0.3,
+        "exposed_boost": 1.0
+    },
+    "default": {
+        "infra_mult": 0.5,
+        "exposed_boost": 1.5
+    }
+}
+4. data/ (Input Placeholder)
+How to Add: Create an empty directory named data inside gvai_algorithm. (You can put an empty .gitkeep file inside it if you want the folder to be tracked by Git, even when empty).
