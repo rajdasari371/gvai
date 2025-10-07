@@ -1,0 +1,242 @@
+GVAI WEB CALCULATOR SOURCE CODE:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GVAI Vulnerability Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .tooltip { position: relative; cursor: pointer; color: #2563eb; font-weight: bold; }
+    .tooltip .tooltip-text {
+      visibility: hidden; width: 220px; background-color: #111827; color: #fff;
+      text-align: left; padding: 6px; border-radius: 8px; position: absolute;
+      z-index: 10; top: -5px; left: 110%; font-size: 0.75rem; line-height: 1rem;
+    }
+    .tooltip:hover .tooltip-text { visibility: visible; }
+  </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+
+  <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-3xl space-y-6">
+    <h1 class="text-3xl font-bold text-center text-gray-800">
+      Geospatial Vulnerability Assessment Index (GVAI) Calculator
+    </h1>
+    <p class="text-center text-gray-600">Enter values or try presets to simulate vulnerability scores.</p>
+    <hr class="border-gray-200">
+
+    <!-- Preset Scenarios -->
+    <div class="flex flex-wrap gap-2 justify-center">
+      <button onclick="applyPreset('urban')" class="px-3 py-1 bg-blue-600 text-white rounded-lg shadow">Urban Disaster Drill</button>
+      <button onclick="applyPreset('forest')" class="px-3 py-1 bg-green-600 text-white rounded-lg shadow">Forest Preserve</button>
+      <button onclick="applyPreset('industrial')" class="px-3 py-1 bg-gray-700 text-white rounded-lg shadow">Industrial Hub</button>
+    </div>
+
+    <!-- Input Form -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <label for="zoneType" class="block text-sm font-medium text-gray-700 mb-1">Zone Type</label>
+        <select id="zoneType" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+          <option value="urban">Urban</option>
+          <option value="agricultural">Agricultural</option>
+          <option value="industrial">Industrial</option>
+          <option value="forest">Forest</option>
+          <option value="default">Default</option>
+        </select>
+      </div>
+      <div>
+        <label for="ndviLossRate" class="block text-sm font-medium text-gray-700 mb-1">NDVI Loss Rate</label>
+        <input type="number" id="ndviLossRate" value="0.5" step="0.01" min="0" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+      </div>
+      <div>
+        <label for="stormFrequency" class="block text-sm font-medium text-gray-700 mb-1">Tornado Frequency</label>
+        <input type="number" id="stormFrequency" value="2" step="1" min="0" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+      </div>
+      <div>
+        <label for="infraCount" class="block text-sm font-medium text-gray-700 mb-1">Infrastructure Count</label>
+        <input type="number" id="infraCount" value="3" step="1" min="0" class="w-full px-4 py-2 border border-gray-300 rounded-lg">
+      </div>
+      <div class="flex items-center col-span-2">
+        <input type="checkbox" id="infraExposed" checked class="h-4 w-4 text-blue-600 rounded border-gray-300">
+        <label for="infraExposed" class="ml-2 text-sm text-gray-700">Direct Infrastructure Exposure</label>
+      </div>
+    </div>
+
+    <hr class="border-gray-200">
+
+    <!-- Results -->
+    <div id="results" class="space-y-3">
+      <h2 class="text-xl font-bold text-center text-gray-800">Results</h2>
+      <p id="vulnerabilityScore" class="text-lg text-center">Vulnerability Score: <span class="text-blue-600">--</span></p>
+      <p id="normalizedScore" class="text-lg text-center">Normalized Score: <span class="text-blue-600">--</span></p>
+      <div class="w-full bg-gray-200 rounded-full h-4">
+        <div id="scoreBar" class="h-4 rounded-full transition-all duration-500" style="width:0%;background-color:green;"></div>
+      </div>
+      <p id="errorMessage" class="text-center text-red-500 hidden">Invalid inputs.</p>
+      <div class="flex justify-center gap-2">
+        <button onclick="downloadCSV()" class="px-4 py-2 bg-indigo-600 text-white rounded-lg shadow">Download CSV</button>
+        <button onclick="shareResults()" class="px-4 py-2 bg-teal-600 text-white rounded-lg shadow">Copy Share Link</button>
+      </div>
+    </div>
+
+    <!-- Contribution Chart -->
+    <div class="mt-6">
+      <canvas id="contribChart" height="120"></canvas>
+    </div>
+
+    <!-- Info Sections -->
+    <div class="mt-8 space-y-4">
+      <details class="bg-gray-50 rounded-xl p-4 shadow">
+        <summary class="cursor-pointer text-lg font-semibold text-gray-800">📘 About the GVAI</summary>
+        <div class="mt-2 text-gray-700 text-sm leading-relaxed">
+          <p>
+            The <strong>Geospatial Vulnerability Assessment Index (GVAI)</strong> measures how vulnerable a zone is to 
+            tornado-related vegetation damage and infrastructure risk. It combines:
+          </p>
+          <ul class="list-disc pl-6 mt-2 space-y-1">
+            <li><strong>NDVI Loss Rate</strong> – Vegetation health decline after tornado events.</li>
+            <li><strong>Tornado Frequency</strong> – How often tornadoes historically pass through the zone.</li>
+            <li><strong>Infrastructure Exposure</strong> – Proximity and presence of critical infrastructure.</li>
+          </ul>
+          <p class="mt-2">Scores are normalized from <strong>0 (low)</strong> to <strong>1 (high)</strong>.</p>
+        </div>
+      </details>
+
+      <details class="bg-gray-50 rounded-xl p-4 shadow">
+        <summary class="cursor-pointer text-lg font-semibold text-gray-800">🧮 How It’s Calculated</summary>
+        <div class="mt-2 text-gray-700 text-sm leading-relaxed">
+          <ul class="list-disc pl-6 space-y-2">
+            <li><strong>NDVI Loss Rate</strong>: Computed as the relative decrease in vegetation greenness before and after a tornado.<br>
+              <code>(NDVIpre − NDVIpost) / NDVIpre</code></li>
+            <li><strong>Tornado Frequency</strong>: Derived from historical tornado track data over a defined period (e.g., 30 years).</li>
+            <li><strong>Infrastructure Exposure</strong>: Based on counts and proximity of critical infrastructure. Weighted multipliers adjust the score depending on zone type and direct exposure.</li>
+          </ul>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <!-- JS (calculator, presets, chart, save/share) -->
+  <script>
+    const ndviLossInput = document.getElementById('ndviLossRate');
+    const stormFrequencyInput = document.getElementById('stormFrequency');
+    const infraCountInput = document.getElementById('infraCount');
+    const infraExposedCheckbox = document.getElementById('infraExposed');
+    const zoneTypeSelect = document.getElementById('zoneType');
+    const vulnerabilityScoreElem = document.getElementById('vulnerabilityScore').querySelector('span');
+    const normalizedScoreElem = document.getElementById('normalizedScore').querySelector('span');
+    const scoreBar = document.getElementById('scoreBar');
+    const errorMessageElem = document.getElementById('errorMessage');
+
+    const ZONE_WEIGHTS = {
+      "urban": { "infra_mult": 0.6, "exposed_boost": 2.0 },
+      "agricultural": { "infra_mult": 0.4, "exposed_boost": 1.2 },
+      "industrial": { "infra_mult": 0.5, "exposed_boost": 1.8 },
+      "forest": { "infra_mult": 0.3, "exposed_boost": 1.0 },
+      "default": { "infra_mult": 0.5, "exposed_boost": 1.5 }
+    };
+
+    let chart;
+
+    function computeProximityScore(infraCount, infraExposed, zoneType) {
+      const weights = ZONE_WEIGHTS[zoneType] || ZONE_WEIGHTS["default"];
+      const exposedBoost = infraExposed ? weights.exposed_boost : 0;
+      return (infraCount * weights.infra_mult) + exposedBoost;
+    }
+
+    function calculateGVAI() {
+      const ndviLossRate = parseFloat(ndviLossInput.value);
+      const stormFrequency = parseFloat(stormFrequencyInput.value);
+      const infraCount = parseInt(infraCountInput.value, 10);
+      const infraExposed = infraExposedCheckbox.checked;
+      const zoneType = zoneTypeSelect.value;
+
+      if (isNaN(ndviLossRate) || isNaN(stormFrequency) || isNaN(infraCount) || ndviLossRate < 0 || stormFrequency < 0 || infraCount < 0) {
+        errorMessageElem.classList.remove('hidden');
+        return;
+      }
+      errorMessageElem.classList.add('hidden');
+
+      const logStormFreq = Math.log(stormFrequency + 1);
+      const logNdviLoss = Math.log(ndviLossRate + 1);
+      const infraProximityScore = computeProximityScore(infraCount, infraExposed, zoneType);
+
+      const vulnerabilityScore = (logStormFreq * infraProximityScore) / (logNdviLoss + 0.01);
+      const finalScore = isNaN(vulnerabilityScore) ? 0 : vulnerabilityScore;
+      const normalizedScore = Math.min(finalScore / 50, 1);
+
+      vulnerabilityScoreElem.textContent = finalScore.toFixed(3);
+      normalizedScoreElem.textContent = normalizedScore.toFixed(3);
+
+      scoreBar.style.width = (normalizedScore * 100) + "%";
+      scoreBar.style.backgroundColor = normalizedScore < 0.33 ? "green" : normalizedScore < 0.66 ? "orange" : "red";
+
+      updateChart(logStormFreq, logNdviLoss, infraProximityScore);
+    }
+
+    function updateChart(storm, ndvi, infra) {
+      const ctx = document.getElementById('contribChart').getContext('2d');
+      if (chart) chart.destroy();
+      chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: ['Tornado Freq', 'NDVI Loss', 'Infrastructure'],
+          datasets: [{
+            label: 'Contribution (log-scaled)',
+            data: [storm, ndvi, infra],
+            backgroundColor: ['#3b82f6','#10b981','#f59e0b']
+          }]
+        },
+        options: { responsive: true, scales: { y: { beginAtZero: true } } }
+      });
+    }
+
+    function applyPreset(type) {
+      if (type === 'urban') { zoneTypeSelect.value = 'urban'; ndviLossInput.value = 0.7; stormFrequencyInput.value = 5; infraCountInput.value = 8; infraExposedCheckbox.checked = true; }
+      if (type === 'forest') { zoneTypeSelect.value = 'forest'; ndviLossInput.value = 0.3; stormFrequencyInput.value = 2; infraCountInput.value = 1; infraExposedCheckbox.checked = false; }
+      if (type === 'industrial') { zoneTypeSelect.value = 'industrial'; ndviLossInput.value = 0.5; stormFrequencyInput.value = 3; infraCountInput.value = 5; infraExposedCheckbox.checked = true; }
+      calculateGVAI();
+    }
+
+    function downloadCSV() {
+      const rows = [['Zone Type','NDVI Loss','Tornado Freq','Infrastructure Count','Exposed','Score','Normalized'],
+        [zoneTypeSelect.value, ndviLossInput.value, stormFrequencyInput.value, infraCountInput.value, infraExposedCheckbox.checked, vulnerabilityScoreElem.textContent, normalizedScoreElem.textContent]];
+      let csv = rows.map(r => r.join(",")).join("\n");
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'gvai_results.csv';
+      link.click();
+    }
+
+    function shareResults() {
+      const url = new URL(window.location.href);
+      url.searchParams.set('zone', zoneTypeSelect.value);
+      url.searchParams.set('ndvi', ndviLossInput.value);
+      url.searchParams.set('freq', stormFrequencyInput.value);
+      url.searchParams.set('infra', infraCountInput.value);
+      url.searchParams.set('exposed', infraExposedCheckbox.checked);
+      navigator.clipboard.writeText(url.toString());
+      alert("Link copied to clipboard!");
+    }
+
+    function loadFromURL() {
+      const params = new URLSearchParams(window.location.search);
+      if (params.has('zone')) zoneTypeSelect.value = params.get('zone');
+      if (params.has('ndvi')) ndviLossInput.value = params.get('ndvi');
+      if (params.has('freq')) stormFrequencyInput.value = params.get('freq');
+      if (params.has('infra')) infraCountInput.value = params.get('infra');
+      if (params.has('exposed')) infraExposedCheckbox.checked = params.get('exposed') === 'true';
+    }
+
+    [ndviLossInput, stormFrequencyInput, infraCountInput, infraExposedCheckbox, zoneTypeSelect]
+      .forEach(el => el.addEventListener('input', calculateGVAI));
+
+    document.addEventListener('DOMContentLoaded', () => { loadFromURL(); calculateGVAI(); });
+  </script>
+</body>
+</html>
